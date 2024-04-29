@@ -1,8 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backstage
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backstage
-  namespace: default
+  namespace: backstage
 spec:
   replicas: 2
   selector:
@@ -14,37 +19,46 @@ spec:
         app: backstage
     spec:
       containers:
-      - name: backstage
-        image: cithit/taylorw8:latest
-        ports:
-        - containerPort: 7000
-        env:
-        - name: POSTGRES_HOST
-          value: postgres
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: password
-        - name: NODE_ENV
-          value: production
+        - name: backstage
+          image: "cithit/taylorw8:latest"  # Replace with your actual image
+          ports:
+            - name: http
+              containerPort: 7000
+          env:
+            - name: POSTGRES_HOST
+              value: "postgres-service"  # Name of your PostgreSQL service
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-secrets
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backstage
-  namespace: default
+  name: backstage-service
+  namespace: backstage
 spec:
   selector:
     app: backstage
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 7000
+    - protocol: TCP
+      port: 80
+      targetPort: 7000
+  type: ClusterIP
 ---
-# Include other resources like ConfigMaps, Secrets, or Ingress as needed.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backstage-secrets
+  namespace: backstage
+type: Opaque
+data:
+  # Secrets should be base64 encoded
+  POSTGRES_USER: "base64-encoded-username"
+  POSTGRES_PASSWORD: "base64-encoded-password"
