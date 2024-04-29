@@ -51,14 +51,3 @@ spec:
       port: 80
       targetPort: 7000
   type: ClusterIP
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backstage-secrets
-  namespace: backstage
-type: Opaque
-data:
-  # Secrets should be base64 encoded
-  POSTGRES_USER: "base64-encoded-username"
-  POSTGRES_PASSWORD: "base64-encoded-password"
