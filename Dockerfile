@@ -13,6 +13,7 @@ RUN yarn init -y
 
 # Install dependencies
 RUN npm install
+npm install @backstage/backend
 
 # If you need to add specific packages, you can do so using yarn add.
 # This step is optional and can be customized to include the packages you need.
