@@ -1,23 +1,36 @@
-# Use the official Node.js 14 image.
-# https://hub.docker.com/_/node
-FROM node:14-slim
+# Use a Node.js base image
+FROM node:14-buster as builder
 
-# Create and change to the app directory.
-WORKDIR /usr/src/app
+# Set the working directory in the Docker container
+WORKDIR /app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
-COPY package*.json ./
+# Copy package.json and package-lock.json/yarn.lock files
+COPY package.json yarn.lock ./
 
-# Install production dependencies.
-RUN npm install --production
+# Install dependencies
+RUN yarn install --frozen-lockfile
 
-# Copy local code to the container image.
+# Copy the rest of your app's source code from your host to your image filesystem.
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN yarn tsc
+RUN yarn build
 
-# Run the web service on container startup.
-CMD [ "npm", "start" ]
+# Production image, copy all the files and run next
+FROM node:14-buster-slim
+
+WORKDIR /app
+
+# Copy built assets from the builder stage
+COPY --from=builder /app/packages/backend/dist/bundle.tar.gz .
+RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
+
+# Install production dependencies
+RUN yarn install --production --frozen-lockfile
+
+# Expose the port the app runs on
+EXPOSE 7000
+
+# Command to run when starting the container
+CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
