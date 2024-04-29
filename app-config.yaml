@@ -1,0 +1,43 @@
+app:
+  title: Backstage
+  baseUrl: http://10.48.10.195:7000  # Change to your public URL in production
+
+organization:
+  name: Miami University
+
+backend:
+  baseUrl: http://10.48.10.195:7000# This should match the public URL of your backend
+  listen:
+    port: 7000
+  cors:
+    origin: http://10.48.10.195:3000  # Adjust according to your frontend host
+
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      database: ${POSTGRES_DB}
+
+auth:
+  providers:
+    github:
+      development:
+        clientId: ${GITHUB_CLIENT_ID}
+        clientSecret: ${GITHUB_CLIENT_SECRET}
+    oauth2:
+      development:
+        clientId: ${OAUTH2_CLIENT_ID}
+        clientSecret: ${OAUTH2_CLIENT_SECRET}
+        authorizationUrl: ${OAUTH2_AUTH_URL}
+        tokenUrl: ${OAUTH2_TOKEN_URL}
+
+logging:
+  level: info
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
