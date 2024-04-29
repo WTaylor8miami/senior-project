@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
-        DOCKER_IMAGE = 'cithit/taylorw8/backstage'
+        DOCKER_IMAGE = 'cithit/taylorw8'
         IMAGE_TAG = "build-${BUILD_NUMBER}"
         GITHUB_URL = 'https://github.com/WTaylor8miami/senior-project.git'
         KUBECONFIG = credentials('taylorw8-225')
