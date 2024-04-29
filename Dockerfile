@@ -11,6 +11,9 @@ COPY server.js /usr/src/app/
 # The `-y` flag will skip the questionnaire and generate a default package.json.
 RUN yarn init -y
 
+# Install dependencies
+RUN npm install
+
 # If you need to add specific packages, you can do so using yarn add.
 # This step is optional and can be customized to include the packages you need.
 # For example:
