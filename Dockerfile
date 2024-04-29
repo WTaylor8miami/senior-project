@@ -1,36 +1,25 @@
-# Use a Node.js base image
-FROM node:14-buster as builder
+# Use the official Node.js 14 image.
+FROM node:14
 
-# Set the working directory in the Docker container
-WORKDIR /app
+# Create and change to the app directory.
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json/yarn.lock files
-COPY package.json yarn.lock ./
+# Initialize a new package.json file using yarn.
+# The `-y` flag will skip the questionnaire and generate a default package.json.
+RUN yarn init -y
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
+# If you need to add specific packages, you can do so using yarn add.
+# This step is optional and can be customized to include the packages you need.
+# For example:
+# RUN yarn add express body-parser
 
-# Copy the rest of your app's source code from your host to your image filesystem.
-COPY . .
+# After your package.json and yarn.lock are correctly set up,
+# you can copy your source code.
+# COPY . .
 
-# Build the application
-RUN yarn tsc
-RUN yarn build
+# You might have a build step for your application.
+# RUN yarn build
 
-# Production image, copy all the files and run next
-FROM node:14-buster-slim
-
-WORKDIR /app
-
-# Copy built assets from the builder stage
-COPY --from=builder /app/packages/backend/dist/bundle.tar.gz .
-RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
-
-# Install production dependencies
-RUN yarn install --production --frozen-lockfile
-
-# Expose the port the app runs on
-EXPOSE 7000
-
-# Command to run when starting the container
-CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+# The command to run your application.
+# Replace "server.js" with the path to your application's entry point.
+CMD ["node", "server.js"]
