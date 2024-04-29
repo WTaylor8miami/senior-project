@@ -4,6 +4,9 @@ FROM node:14
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
+# Copy the server.js file from the build context into the container's /usr/src/app directory
+COPY server.js /usr/src/app/
+
 # Initialize a new package.json file using yarn.
 # The `-y` flag will skip the questionnaire and generate a default package.json.
 RUN yarn init -y
