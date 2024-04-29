@@ -21,7 +21,7 @@ RUN npm install
 
 # After your package.json and yarn.lock are correctly set up,
 # you can copy your source code.
-# COPY . .
+COPY . .
 
 # You might have a build step for your application.
 # RUN yarn build
