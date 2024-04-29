@@ -28,15 +28,6 @@ spec:
             - name: POSTGRES_HOST
               value: "postgres-service"  # Name of your PostgreSQL service
             - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: backstage-secrets
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: backstage-secrets
-                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
