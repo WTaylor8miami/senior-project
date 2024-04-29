@@ -59,6 +59,6 @@ metadata:
   namespace: backstage
 type: Opaque
 data:
-  # Secrets should be base64 encoded
   POSTGRES_USER: "dXNlcg=="
-  POSTGRES_PASSWORD: "cGFzc3dvcmQ"
+  POSTGRES_PASSWORD: "cGFzc3dvcmQ="
+
