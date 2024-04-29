@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: backstage
-          image: "cithit/taylorw8/backstage:latest"  # Replace with your actual image
+          image: "cithit/taylorw8:latest"  # Replace with your actual image
           ports:
             - name: http
               containerPort: 7000
