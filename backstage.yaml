@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: backstage
-          image: "cithit/taylorw8:latest"  # Replace with your actual image
+          image: "cithit/taylorw8/backstage:latest"  # Replace with your actual image
           ports:
             - name: http
               containerPort: 7000
@@ -28,6 +28,15 @@ spec:
             - name: POSTGRES_HOST
               value: "postgres-service"  # Name of your PostgreSQL service
             - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-secrets
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -42,3 +51,14 @@ spec:
       port: 80
       targetPort: 7000
   type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backstage-secrets
+  namespace: backstage
+type: Opaque
+data:
+  # Secrets should be base64 encoded
+  POSTGRES_USER: "base64-encoded-username"
+  POSTGRES_PASSWORD: "base64-encoded-password"
