@@ -43,7 +43,7 @@ pipeline {
                     def kubeConfig = readFile(KUBECONFIG)
                     // This updates the deployment.yaml to use the new image tag
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' kubernetes/backstage.yaml"
-                    sh "kubectl apply -f kubernetes/backstage.yaml"
+                    sh "kubectl apply -f backstage.yaml"
                 }
             }
         }
